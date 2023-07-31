@@ -1,0 +1,19 @@
+{
+  "name": "diffie-hellman",
+  "version": "1.0.0",
+  "description": "diffie hellman algorithm",
+  "main": "app.js",
+  "scripts": {
+    "test": "helloWorld",
+    "start": "nodemon app.js"
+  },
+  "keywords": [
+    "1234"
+  ],
+  "author": "Nathnael Bassa",
+  "license": "ISC",
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "nodemon": "^3.0.1"
+  }
+}
