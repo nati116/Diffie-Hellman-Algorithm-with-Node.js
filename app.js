@@ -1,19 +1,36 @@
 
 const crypto = require('crypto'); 
 
-class DHGenParameterSpec {
-  static p;
-  static g;
-  static a;
-  static b;
-  static A;
-  static B;
+class DHParameters {
+  static p; // prime number
+  static g; // generator
+  static a; // private key for Alice
+  static b; // private key for bob
+  static A; // public key generated
+  static B; // public key generated
 
-  static getPrimeP_G() {
-    const rand1 = crypto.randomBytes(32);
+  static getPrimeAndGenerator() {
+
+            // Utility function to check if a BigInt is prime  
+        function isPrime(num) {
+          for (let i = 2n; i < num; i++) {
+            if (num % i === 0n) return false;
+          }
+          return true;
+        }
+
+        // Generate a random prime BigInt
+        let prime; 
+        do {
+          const randBytes = crypto.randomBytes(32);
+          let rand = BigInt('0x' + randBytes.toString('hex'));
+          prime = rand % 10000000000000000n;
+        } while (!isPrime(prime))
+
+    const rand1 = prime;
     const rand2 = crypto.randomBytes(32);
 
-    this.p = BigInt('0x' + rand1.toString('hex'));
+    this.p = rand1;
     this.g = BigInt('0x' + rand2.toString('hex'));
 
     console.log(`${this.p},${this.g}`);
@@ -33,20 +50,23 @@ class DHGenParameterSpec {
 }
 
 Execute = () => {
-  DHGenParameterSpec.getPrimeP_G();
-  DHGenParameterSpec.getExponent();
-  DHGenParameterSpec.pow();
+  DHParameters.getPrimeAndGenerator();
+  DHParameters.getExponent();
+  DHParameters.pow();
 
-  const Sa = BigInt(DHGenParameterSpec.B) ** BigInt(DHGenParameterSpec.a) % DHGenParameterSpec.p;
-  const Sb = BigInt(DHGenParameterSpec.A) ** BigInt(DHGenParameterSpec.b) % DHGenParameterSpec.p;
+  const Sa = BigInt(DHParameters.B) ** BigInt(DHParameters.a) % DHParameters.p;
+  const Sb = BigInt(DHParameters.A) ** BigInt(DHParameters.b) % DHParameters.p;
 
-  console.log(`${DHGenParameterSpec.A}__${DHGenParameterSpec.B}`);
+  console.log(`${DHParameters.A}`);
+  console.log(`${DHParameters.B}`);
+
   if( Sa === Sb){
-     console.log('the shared keys are the same');
+     console.log('The shared keys are the same');
   }
-  console.log(`${Sa}__${Sb}`);
+  console.log(`${Sa} === ${Sb}`);
 }
 
+// 
 Execute();
 
 
